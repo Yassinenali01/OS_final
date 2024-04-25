@@ -1,0 +1,36 @@
+version: "3.8"
+
+services:
+  node-service:
+    build:
+      context: ./docker/api
+      dockerfile: Dockerfile
+    restart: always
+    env_file:
+          - ./variables.env
+    # ports:
+    #   - "3000:3000"
+    depends_on:
+      - db
+    scale: 3
+
+  nginx:
+    build:
+      context: ./docker/nginx
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - "8080:80"
+    depends_on:
+      - node-service
+
+  db:
+      build:
+        context: ./docker/db
+        dockerfile: Dockerfile
+      restart: always
+      env_file:
+            - ./variables.env
+
+ 
+
